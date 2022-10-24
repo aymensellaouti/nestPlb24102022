@@ -6,7 +6,7 @@ import { TestModule } from './test/test.module';
 import { TodoModule } from './todo/todo.module';
 
 @Module({
-  imports: [TestModule, FirstModule,  TodoModule],
+  imports: [TestModule,  TodoModule],
   controllers: [AppController],
   providers: [AppService]
 })
