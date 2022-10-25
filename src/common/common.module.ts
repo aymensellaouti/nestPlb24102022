@@ -14,9 +14,9 @@ const UUID_PROVIDER = {
 })
 export class CommonModule implements NestModule{
   configure(consumer: MiddlewareConsumer): any {
-    consumer.apply(T4Middleware)
-      .forRoutes('')
-    consumer.apply(T3Middleware)
-      .forRoutes('')
+    // consumer.apply(T4Middleware)
+    //   .forRoutes('')
+    // consumer.apply(T3Middleware)
+    //   .forRoutes('')
   }
 }{}

@@ -16,9 +16,9 @@ import { secondMiddleware } from "./middleware/functions.middleware";
 })
 export class AppModule implements NestModule{
   configure(consumer: MiddlewareConsumer): any {
-    consumer.apply(FirstMiddleware)
-      .forRoutes('')
-      .apply(secondMiddleware)
-      .forRoutes('test')
+    // consumer.apply(FirstMiddleware)
+    //   .forRoutes('')
+    //   .apply(secondMiddleware)
+    //   .forRoutes('test')
   }
 }

@@ -8,7 +8,7 @@ import { secondMiddleware, T1Middleware } from "../middleware/functions.middlewa
 })
 export class TestModule implements NestModule{
   configure(consumer: MiddlewareConsumer): any {
-    consumer.apply(T1Middleware)
-      .forRoutes('')
+    // consumer.apply(T1Middleware)
+    //   .forRoutes('')
   }
 }{}

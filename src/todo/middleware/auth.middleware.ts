@@ -17,6 +17,7 @@ export class AuthMiddleware implements NestMiddleware {
         req['user'] = payload['userId'];
         console.log('req user',  req['user']);
         next();
+        return;
       } catch (e) {
         // sinon on throw une exception
         // else {
