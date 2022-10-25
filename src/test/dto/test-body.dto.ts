@@ -11,4 +11,6 @@ export class TestBodyDto {
     }
   })
   age: number;
+
+  skills: string[];
 }

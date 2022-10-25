@@ -1,14 +1,27 @@
-import { Body, Controller, DefaultValuePipe, Get, HttpStatus, Param, ParseIntPipe } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  DefaultValuePipe,
+  Get,
+  HttpStatus,
+  Param,
+  ParseArrayPipe,
+  ParseIntPipe, Post
+} from "@nestjs/common";
 import { TestBodyDto } from "./dto/test-body.dto";
+import { ArrayToStringPipe } from "../generics/pipes/array-to-string.pipe";
 
 @Controller('test')
 export class TestController {
-  @Get(':id?')
+  @Post(':id?')
   test(@Param('id', new DefaultValuePipe(10),
     new ParseIntPipe({errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE}
   )) id: number,
-       @Body() testBodyDto: TestBodyDto
+       @Body('skills',
+         new ParseArrayPipe({items: String}),
+         ArrayToStringPipe
+       ) skills: string[]
        ) {
-    return `test value : ${id}`;
+    return skills;
   }
 }
