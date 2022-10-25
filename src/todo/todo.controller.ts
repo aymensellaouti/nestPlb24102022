@@ -36,6 +36,8 @@ export class TodoController {
   addTodo(
     @Body() addTodoDto: AddTodoDto
     ): TodoModel {
+    console.log(addTodoDto instanceof AddTodoDto);
+    console.log('addTodoDto', addTodoDto);
     return this.todoService.addTodo(addTodoDto);
   }
   @Get(':id')
