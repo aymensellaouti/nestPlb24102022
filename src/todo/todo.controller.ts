@@ -34,10 +34,12 @@ export class TodoController {
   }
   @Post()
   addTodo(
-    @Body() addTodoDto: AddTodoDto
+    @Body() addTodoDto: AddTodoDto,
+    @Req() request: Request
     ): TodoModel {
-    console.log(addTodoDto instanceof AddTodoDto);
-    console.log('addTodoDto', addTodoDto);
+    console.log('user:', request['user']);
+    // console.log(addTodoDto instanceof AddTodoDto);
+    addTodoDto.userId = request['user'];
     return this.todoService.addTodo(addTodoDto);
   }
   @Get(':id')
@@ -45,11 +47,14 @@ export class TodoController {
     return this.todoService.getTodoById(id);
   }
   @Delete(':id')
-  deleteTodo(@Param('id') id: string) {
-    return this.todoService.deleteTodo(id);
+  deleteTodo(@Param('id') id: string,
+             @Req() request: Request
+  ) {
+    return this.todoService.deleteTodo(id, request['user']);
    }
   @Patch(':id')
-  updateTodo(@Param('id') id: string, @Body() updateTodoDto: UpdateTodoDto) {
-    return this.todoService.updateTodo(id, updateTodoDto);
+  updateTodo(@Param('id') id: string, @Body() updateTodoDto: UpdateTodoDto,
+             @Req() request: Request) {
+    return this.todoService.updateTodo(id, updateTodoDto, request['user']);
   }
 }

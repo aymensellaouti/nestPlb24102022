@@ -11,6 +11,7 @@ export class TodoModel {
     public id: string = '',
     public name: string = '',
     public description: string = '',
+    public userId: number,
     public createdAt: Date = new Date(),
     public status: TodoStatusEnum = TodoStatusEnum.waiting
   ) {}

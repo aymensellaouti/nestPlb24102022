@@ -1,9 +1,10 @@
-import { Injectable, NestMiddleware } from '@nestjs/common';
+import { BadRequestException, Injectable, NestMiddleware } from "@nestjs/common";
 import { Request, Response } from "express";
 
 @Injectable()
 export class FirstMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: () => void) {
+    // throw new BadRequestException('pbm');
     console.log('In First Middleware');
     next();
   }

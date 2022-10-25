@@ -12,4 +12,6 @@ export class AddTodoDto {
   @ValidateNested()
   @Type(() => Owner)
   owner: Owner;
+
+  userId: number;
 }
