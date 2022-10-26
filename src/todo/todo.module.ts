@@ -4,10 +4,14 @@ import { LoggerService } from "../services/logger.service";
 import { SayHelloService } from "../services/say-hello/say-hello.service";
 import { TodoService } from "./todo.service";
 import { AuthMiddleware } from "./middleware/auth.middleware";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { TodoEntity } from "./entity/todo.entity";
+import { TodoDbController } from "./todo-db.controller";
 
 @Module({
-  controllers: [TodoController],
-  providers: [LoggerService, SayHelloService, TodoService]
+  controllers: [TodoController, TodoDbController],
+  providers: [LoggerService, SayHelloService, TodoService],
+  imports: [TypeOrmModule.forFeature([TodoEntity])]
 })
 export class TodoModule implements NestModule{
   configure(consumer: MiddlewareConsumer): any {

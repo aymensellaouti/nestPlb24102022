@@ -1,16 +1,43 @@
 import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { FirstModule } from "./first.module";
 import { TestModule } from './test/test.module';
 import { TodoModule } from './todo/todo.module';
-import { SayHelloService } from './services/say-hello/say-hello.service';
 import { CommonModule } from './common/common.module';
-import { FirstMiddleware } from "./middleware/first.middleware";
-import { secondMiddleware } from "./middleware/functions.middleware";
+import { ConfigModule, ConfigService } from "@nestjs/config";
+import { devConfig } from "./config/dev.config";
+import { preprodConfig } from "./config/preprod.config";
+import { getConfig } from "./generics/get-config.config";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { PersonneEntity } from "./test/entity/personne.entity";
+import { TodoEntity } from "./todo/entity/todo.entity";
 
 @Module({
-  imports: [TestModule, TodoModule, CommonModule],
+  imports: [
+    TestModule,
+    TodoModule,
+    CommonModule,
+    ConfigModule.forRoot({
+      isGlobal:true,
+      load:[getConfig()]
+    }),
+    TypeOrmModule.forRootAsync({
+      useFactory: (configService: ConfigService) => {
+        return {
+          type: 'mysql',
+          host:  configService.get('DB.HOST'),
+          username:  configService.get('DB.USER') ,
+          password:  configService.get('DB.PASSWORD'),
+          database:  configService.get('DB.NAME'),
+          port: +configService.get('DB.PORT'),
+          autoLoadEntities: true,
+          logging: true,
+          synchronize: true
+        }
+      },
+      inject: [ConfigService]
+    })
+  ],
   controllers: [AppController],
   providers: [AppService]
 })

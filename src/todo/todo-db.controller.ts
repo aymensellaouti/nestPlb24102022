@@ -20,15 +20,14 @@ import { UpdateTodoDto } from "./dto/update-todo.dto";
 import { LoggerService } from "../services/logger.service";
 import { SayHelloService } from "../services/say-hello/say-hello.service";
 import { TodoService } from "./todo.service";
+import { TodoEntity } from "./entity/todo.entity";
 
 @Controller({
   path: 'todo',
-  version: '1'
+  version: '2'
 })
-export class TodoController {
+export class TodoDbController {
   constructor(
-    private readonly loggerService: LoggerService,
-    private readonly sayHelloService: SayHelloService,
     private readonly todoService: TodoService
   ) {}
   @Get()
@@ -37,13 +36,9 @@ export class TodoController {
   }
   @Post()
   addTodo(
-    @Body() addTodoDto: AddTodoDto,
-    @Req() request: Request
-    ): TodoModel {
-    console.log('user:', request['user']);
-    // console.log(addTodoDto instanceof AddTodoDto);
-    addTodoDto.userId = request['user'];
-    return this.todoService.addTodo(addTodoDto);
+    @Body() addTodoDto: AddTodoDto
+    ): Promise<TodoEntity> {
+    return this.todoService.create(addTodoDto);
   }
   @Get(':id')
   getTodoById(@Param('id') id: string): TodoModel {
@@ -56,8 +51,7 @@ export class TodoController {
     return this.todoService.deleteTodo(id, request['user']);
    }
   @Patch(':id')
-  updateTodo(@Param('id') id: string, @Body() updateTodoDto: UpdateTodoDto,
-             @Req() request: Request) {
-    return this.todoService.updateTodo(id, updateTodoDto, request['user']);
+  updateTodo(@Param('id') id: string, @Body() updateTodoDto: UpdateTodoDto): Promise<TodoEntity> {
+    return this.todoService.update(id, updateTodoDto);
   }
 }
