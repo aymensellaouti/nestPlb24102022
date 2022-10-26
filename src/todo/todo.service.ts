@@ -2,10 +2,11 @@ import { Body, ForbiddenException, Inject, Injectable, NotFoundException, Param 
 import { TodoModel } from "./todo.model";
 import { AddTodoDto } from "./dto/add-todo.dto";
 import { UpdateTodoDto } from "./dto/update-todo.dto";
-import { Repository } from "typeorm";
+import { Equal, ILike, Repository } from "typeorm";
 import { TodoEntity } from "./entity/todo.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UpdateResult } from "typeorm/query-builder/result/UpdateResult";
+import { SearchTodoDto } from "./dto/search-todo.dto";
 
 @Injectable()
 export class TodoService {
@@ -92,5 +93,26 @@ export class TodoService {
       throw new NotFoundException("Todo innexistant");
     }
     return index;
+  }
+
+  findAll(searchTodoDto: SearchTodoDto): Promise<TodoEntity[]> {
+    const where = [];
+    const {search, status} = searchTodoDto;
+    if (search) {
+      where.push({name: ILike(`%${search}%`)});
+      where.push({description: ILike(`%${search}%`)});
+    }
+    if (status) {
+      where.push({status: Equal(status)})
+    }
+    return this.todoRepository.find(where.length? {where}: {});
+  }
+
+  async findOne(id: string): Promise<TodoEntity> {
+    const todo = await this.todoRepository.findOne({where: {id}});
+    if (!todo) {
+      throw new NotFoundException('Todo innexistant');
+    }
+    return todo;
   }
 }

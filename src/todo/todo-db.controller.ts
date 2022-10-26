@@ -8,7 +8,7 @@ import {
   NotFoundException,
   Param,
   Patch,
-  Post,
+  Post, Query,
   Req,
   Res
 } from "@nestjs/common";
@@ -22,6 +22,7 @@ import { SayHelloService } from "../services/say-hello/say-hello.service";
 import { TodoService } from "./todo.service";
 import { TodoEntity } from "./entity/todo.entity";
 import { UpdateResult } from "typeorm/query-builder/result/UpdateResult";
+import { SearchTodoDto } from "./dto/search-todo.dto";
 
 @Controller({
   path: 'todo',
@@ -32,8 +33,8 @@ export class TodoDbController {
     private readonly todoService: TodoService
   ) {}
   @Get()
-  getTodos(@Req() request: Request): TodoModel[] {
-    return this.todoService.getTodos();
+  getTodos(@Query() searchTodoDto: SearchTodoDto): Promise<TodoEntity[]> {
+    return this.todoService.findAll(searchTodoDto);
   }
   @Post()
   addTodo(
@@ -42,8 +43,8 @@ export class TodoDbController {
     return this.todoService.create(addTodoDto);
   }
   @Get(':id')
-  getTodoById(@Param('id') id: string): TodoModel {
-    return this.todoService.getTodoById(id);
+  getTodoById(@Param('id') id: string): Promise<TodoEntity> {
+    return this.todoService.findOne(id);
   }
   @Delete(':id')
   deleteTodo(@Param('id') id: string): Promise<UpdateResult> {
