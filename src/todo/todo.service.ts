@@ -7,6 +7,11 @@ import { TodoEntity } from "./entity/todo.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UpdateResult } from "typeorm/query-builder/result/UpdateResult";
 import { SearchTodoDto } from "./dto/search-todo.dto";
+import { PaginateDto } from "../generics/dto/paginate.dto";
+import { paginateQb } from "../generics/db/paginate.qb";
+import { DateIntervalDto } from "../generics/dto/date-interval.dto";
+import { dateIntervalDb } from "../generics/db/date-interval.db";
+import { StatsStatusDto } from "./dto/stats-status.dto";
 
 @Injectable()
 export class TodoService {
@@ -107,12 +112,27 @@ export class TodoService {
     }
     return this.todoRepository.find(where.length? {where}: {});
   }
-
+  findQB(paginateDto: PaginateDto): Promise<TodoEntity[]> {
+    const { nbre, page} = paginateDto;
+    const qb = this.todoRepository.createQueryBuilder();
+    if (page) {
+      paginateQb(qb, nbre, page);
+    }
+    return qb.getMany();
+  }
   async findOne(id: string): Promise<TodoEntity> {
     const todo = await this.todoRepository.findOne({where: {id}});
     if (!todo) {
       throw new NotFoundException('Todo innexistant');
     }
     return todo;
+  }
+
+  statsTodoStatus(dateIntervalDto: DateIntervalDto): Promise<StatsStatusDto[]> {
+    const qb = this.todoRepository.createQueryBuilder('');
+    qb.select('status, count(*) as nombre');
+    const {dateMin, dateMax} = dateIntervalDto;
+    dateIntervalDb(qb, dateMin, dateMax);
+    return qb.getRawMany();
   }
 }
