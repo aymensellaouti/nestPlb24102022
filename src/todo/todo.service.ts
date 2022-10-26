@@ -5,6 +5,7 @@ import { UpdateTodoDto } from "./dto/update-todo.dto";
 import { Repository } from "typeorm";
 import { TodoEntity } from "./entity/todo.entity";
 import { InjectRepository } from "@nestjs/typeorm";
+import { UpdateResult } from "typeorm/query-builder/result/UpdateResult";
 
 @Injectable()
 export class TodoService {
@@ -30,6 +31,22 @@ export class TodoService {
       throw new NotFoundException('Todo innexistant');
     }
     return this.todoRepository.save(todo);
+  }
+  // soft delete
+  async delete(id: string): Promise<UpdateResult> {
+    const result = await this.todoRepository.softDelete(id);
+    if(! result.affected) {
+      throw new NotFoundException('Todo innexistant');
+    }
+    return result;
+  }
+  // restore
+  async restore(id: string): Promise<UpdateResult> {
+    const result = await this.todoRepository.restore(id);
+    if(! result.affected) {
+      throw new NotFoundException('Todo innexistant');
+    }
+    return result;
   }
 
   // In Memory

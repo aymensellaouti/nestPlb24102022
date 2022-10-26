@@ -21,6 +21,7 @@ import { LoggerService } from "../services/logger.service";
 import { SayHelloService } from "../services/say-hello/say-hello.service";
 import { TodoService } from "./todo.service";
 import { TodoEntity } from "./entity/todo.entity";
+import { UpdateResult } from "typeorm/query-builder/result/UpdateResult";
 
 @Controller({
   path: 'todo',
@@ -45,11 +46,13 @@ export class TodoDbController {
     return this.todoService.getTodoById(id);
   }
   @Delete(':id')
-  deleteTodo(@Param('id') id: string,
-             @Req() request: Request
-  ) {
-    return this.todoService.deleteTodo(id, request['user']);
+  deleteTodo(@Param('id') id: string): Promise<UpdateResult> {
+    return this.todoService.delete(id);
    }
+  @Patch('restore/:id')
+  restoreTodo(@Param('id') id: string): Promise<UpdateResult> {
+    return this.todoService.restore(id);
+  }
   @Patch(':id')
   updateTodo(@Param('id') id: string, @Body() updateTodoDto: UpdateTodoDto): Promise<TodoEntity> {
     return this.todoService.update(id, updateTodoDto);
