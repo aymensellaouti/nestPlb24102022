@@ -3,9 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  HttpCode,
-  HttpStatus,
-  NotFoundException,
   Param,
   Patch,
   Post,
@@ -42,7 +39,7 @@ export class TodoController {
     ): TodoModel {
     console.log('user:', request['user']);
     // console.log(addTodoDto instanceof AddTodoDto);
-    addTodoDto.userId = request['user'];
+    addTodoDto.userId = +request['user'];
     return this.todoService.addTodo(addTodoDto);
   }
   @Get(':id')
@@ -53,11 +50,11 @@ export class TodoController {
   deleteTodo(@Param('id') id: string,
              @Req() request: Request
   ) {
-    return this.todoService.deleteTodo(id, request['user']);
+    return this.todoService.deleteTodo(id, +request['user']);
    }
   @Patch(':id')
   updateTodo(@Param('id') id: string, @Body() updateTodoDto: UpdateTodoDto,
              @Req() request: Request) {
-    return this.todoService.updateTodo(id, updateTodoDto, request['user']);
+    return this.todoService.updateTodo(id, updateTodoDto, +request['user']);
   }
 }
