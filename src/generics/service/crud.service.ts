@@ -26,7 +26,7 @@ export class CrudService <Entity extends HasIdInterface> {
     return this.repository.save(addDto);
   }
   // Update Todo
-  async update(id: string, updateDto): Promise<Entity> {
+  async update(id, updateDto): Promise<Entity> {
     const todo = await this.repository.preload({id, ...updateDto});
     if (!todo) {
       throw new NotFoundException('Not Found');
@@ -34,7 +34,7 @@ export class CrudService <Entity extends HasIdInterface> {
     return this.repository.save(todo);
   }
   // soft delete
-  async delete(id: string): Promise<UpdateResult> {
+  async remove(id): Promise<UpdateResult> {
     const result = await this.repository.softDelete(id);
     if(! result.affected) {
       throw new NotFoundException('Not Found');
@@ -42,7 +42,7 @@ export class CrudService <Entity extends HasIdInterface> {
     return result;
   }
   // restore
-  async restore(id: string): Promise<UpdateResult> {
+  async restore(id): Promise<UpdateResult> {
     const result = await this.repository.restore(id);
     if(! result.affected) {
       throw new NotFoundException('Not Found');

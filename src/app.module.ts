@@ -11,6 +11,9 @@ import { getConfig } from "./generics/get-config.config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { PersonneEntity } from "./test/entity/personne.entity";
 import { TodoEntity } from "./todo/entity/todo.entity";
+import { SkillModule } from './skill/skill.module';
+import { CvModule } from './cv/cv.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -36,7 +39,10 @@ import { TodoEntity } from "./todo/entity/todo.entity";
         }
       },
       inject: [ConfigService]
-    })
+    }),
+    SkillModule,
+    CvModule,
+    UserModule
   ],
   controllers: [AppController],
   providers: [AppService]

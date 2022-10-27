@@ -20,11 +20,8 @@ export class TodoService {
     private uuid,
     @InjectRepository(TodoEntity)
     private readonly todoRepository: Repository<TodoEntity>
-  ) {
-  }
-
+  ) {}
   todos: TodoModel[] = [];
-
   // Db
   //Add Todo
   create(addTodoDto: AddTodoDto): Promise<TodoEntity> {
