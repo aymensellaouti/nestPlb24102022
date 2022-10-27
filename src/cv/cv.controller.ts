@@ -17,14 +17,18 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
 import { filename } from "../generics/upload/get-filename.upload";
 import { AuthGuard } from "@nestjs/passport";
+import { GetUser } from "../generics/decorator/get-user.decorator";
+import { User } from "../user/entities/user.entity";
+import { Roles } from "../generics/decorator/roles.decorator";
+import { RoleGuard } from "../auth/guards/role.guard";
 
 @Controller('cv')
-@UseGuards(AuthGuard('jwt'))
+@Roles('admin')
+@UseGuards(AuthGuard('jwt'), RoleGuard)
 export class CvController {
   constructor(private readonly cvService: CvService) {}
 
   @Post()
-
   @UseInterceptors(FileInterceptor(
     'file',
     {
@@ -39,18 +43,17 @@ export class CvController {
   create(
     @Body() createCvDto: CreateCvDto,
     @UploadedFile() file: Express.Multer.File,
-    @Req() request
+    @GetUser() user: User
   ) {
-    console.log('user', request.user);
-    console.log(createCvDto);
-    console.log(file);
     if (file) {
       createCvDto.path = 'upload/' + file.filename;
     }
+    createCvDto.user = user;
     return this.cvService.create(createCvDto);
   }
 
   @Get()
+  @Roles('user')
   findAll() {
     return this.cvService.findAll();
   }

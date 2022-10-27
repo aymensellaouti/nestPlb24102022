@@ -3,6 +3,7 @@ import { Type } from "class-transformer";
 import { Skill } from "../../skill/entities/skill.entity";
 import { CreateSkillDto } from "../../skill/dto/create-skill.dto";
 import { AddSkillDto } from "../../skill/dto/add-skill.dto";
+import { User } from "../../user/entities/user.entity";
 
 export class CreateCvDto {
   @IsString()
@@ -19,4 +20,6 @@ export class CreateCvDto {
   @Type(() => AddSkillDto )
   @IsOptional()
   skills: Skill[];
+
+  user: User;
 }
