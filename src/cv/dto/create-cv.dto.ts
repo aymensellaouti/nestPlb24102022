@@ -15,8 +15,8 @@ export class CreateCvDto {
   @IsString()
   @IsNotEmpty()
   job: string;
-  @IsString()
-  @IsNotEmpty()
+
+
   path: string;
   @Type(() => Skill )
   @IsOptional()

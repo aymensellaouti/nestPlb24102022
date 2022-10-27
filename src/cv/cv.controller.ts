@@ -1,15 +1,36 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile } from "@nestjs/common";
 import { CvService } from './cv.service';
 import { CreateCvDto } from './dto/create-cv.dto';
 import { UpdateCvDto } from './dto/update-cv.dto';
+import { FileInterceptor } from "@nestjs/platform-express";
+import { diskStorage } from "multer";
+import { filename } from "../generics/upload/get-filename.upload";
 
 @Controller('cv')
 export class CvController {
   constructor(private readonly cvService: CvService) {}
 
   @Post()
-  create(@Body() createCvDto: CreateCvDto) {
+  @UseInterceptors(FileInterceptor(
+    'file',
+    {
+      storage: diskStorage(
+        {
+          destination: 'public/uploads',
+          filename
+        }
+      )
+    }
+  ))
+  create(
+    @Body() createCvDto: CreateCvDto,
+    @UploadedFile() file: Express.Multer.File
+  ) {
     console.log(createCvDto);
+    console.log(file);
+    if (file) {
+      createCvDto.path = 'upload/' + file.filename;
+    }
     return this.cvService.create(createCvDto);
   }
 
