@@ -5,6 +5,8 @@ export class Skill extends TimeStampEntity{
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  designation: string;
+  @Column({
+    nullable: false
+  })
+  designation: string = null;
 }

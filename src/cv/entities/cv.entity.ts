@@ -25,7 +25,7 @@ export class Cv {
   @ManyToMany(
     () => Skill,
     null,
-    {eager: true}
+    {eager: true, cascade: ["insert"] }
   )
   @JoinTable({
     name: 'cv_skills',
