@@ -19,11 +19,13 @@ export class Cv {
   @ManyToOne(
     () => User,
     (user: User) => user.cvs,
-    {}
+    {eager: true}
   )
   user: User;
   @ManyToMany(
-    () => Skill
+    () => Skill,
+    null,
+    {eager: true}
   )
   @JoinTable({
     name: 'cv_skills',

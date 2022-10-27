@@ -9,6 +9,7 @@ export class CvController {
 
   @Post()
   create(@Body() createCvDto: CreateCvDto) {
+    console.log(createCvDto);
     return this.cvService.create(createCvDto);
   }
 
